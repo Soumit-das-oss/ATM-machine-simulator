@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RGIT ATM Machine</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+<div class="atm-container">
+    <!-- ATM Machine -->
+    <div class="atm-machine">
+        <!-- Header -->
+        <div class="atm-header">
+            <div class="bank-logo">
+                <i class="fas fa-university"></i>
+                <span>RGIT ATM Machine</span>
+            </div>
+            <div class="atm-status">
+                <div class="status-light"></div>
+                <span>Ready</span>
+            </div>
+        </div>
+
+        <!-- Main Screen -->
+        <div class="atm-screen">
+            <div id="screen-content">
+                <!-- Login Screen -->
+                <div id="login-screen" class="screen-view active">
+                    <div class="screen-header">
+                        <i class="fas fa-lock"></i>
+                        <h2>Welcome to RGIT ATM</h2>
+                    </div>
+                    <div class="screen-body">
+                        <p class="screen-subtitle">Please Insert Your Card</p>
+                        
+                        <div class="login-form">
+                            <div class="form-group">
+                                <label>Card Number</label>
+                                <input type="text" id="card-no" maxlength="4" placeholder="1234" class="input-field">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>PIN</label>
+                                <input type="password" id="pin" maxlength="4" placeholder="****" class="input-field">
+                            </div>
+
+                            <button class="btn-primary" onclick="login()">
+                                <i class="fas fa-arrow-right"></i> Login
+                            </button>
+                        </div>
+
+                        <div class="demo-info">
+                            <p><strong>Demo Account:</strong></p>
+                            <p>Card: <span>1234</span> | PIN: <span>1234</span></p>
+                            <p>Card: <span>5678</span> | PIN: <span>5678</span></p>
+                            <p>Card: <span>9012</span> | PIN: <span>9012</span></p>
+                        </div>
+                    </div>
+                    <div id="login-error" class="error-message" style="display:none;"></div>
+                </div>
+
+                <!-- Main Menu Screen -->
+                <div id="menu-screen" class="screen-view">
+                    <div class="screen-header">
+                        <h2>Main Menu</h2>
+                        <span id="user-name" class="user-greeting"></span>
+                    </div>
+                    <div class="menu-grid">
+                        <button class="menu-btn" onclick="showScreen('balance-screen')">
+                            <i class="fas fa-wallet"></i>
+                            <span>Check Balance</span>
+                        </button>
+                        <button class="menu-btn" onclick="showScreen('withdraw-screen')">
+                            <i class="fas fa-money-bill-wave"></i>
+                            <span>Withdraw Cash</span>
+                        </button>
+                        <button class="menu-btn" onclick="showScreen('deposit-screen')">
+                            <i class="fas fa-piggy-bank"></i>
+                            <span>Deposit Money</span>
+                        </button>
+                        <button class="menu-btn" onclick="showScreen('statement-screen')">
+                            <i class="fas fa-receipt"></i>
+                            <span>Mini Statement</span>
+                        </button>
+                        <button class="menu-btn" onclick="showScreen('fast-cash-screen')">
+                            <i class="fas fa-bolt"></i>
+                            <span>Fast Cash</span>
+                        </button>
+                        <button class="menu-btn" onclick="showScreen('pin-screen')">
+                            <i class="fas fa-key"></i>
+                            <span>Change PIN</span>
+                        </button>
+                        <button class="menu-btn" onclick="showScreen('account-screen')">
+                            <i class="fas fa-info-circle"></i>
+                            <span>Account Info</span>
+                        </button>
+                    </div>
+                    <div class="btn-logout">
+                        <button class="btn-secondary" onclick="logout()">
+                            <i class="fas fa-sign-out-alt"></i> Exit
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Balance Screen -->
+                <div id="balance-screen" class="screen-view">
+                    <div class="screen-header">
+                        <button class="btn-back" onclick="showScreen('menu-screen')">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                        <h2>Account Balance</h2>
+                    </div>
+                    <div class="screen-body">
+                        <div class="balance-card">
+                            <div class="balance-label">Current Balance</div>
+                            <div class="balance-amount" id="display-balance">₹ 0.00</div>
+                            <div class="balance-account" id="display-account">Account: ****</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Withdraw Screen -->
+                <div id="withdraw-screen" class="screen-view">
+                    <div class="screen-header">
+                        <button class="btn-back" onclick="showScreen('menu-screen')">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                        <h2>Withdraw Cash</h2>
+                    </div>
+                    <div class="screen-body">
+                        <div class="quick-amounts">
+                            <button class="quick-btn" onclick="quickWithdraw(500)">₹500</button>
+                            <button class="quick-btn" onclick="quickWithdraw(1000)">₹1000</button>
+                            <button class="quick-btn" onclick="quickWithdraw(2000)">₹2000</button>
+                        </div>
+                        <div class="divider">OR</div>
+                        <div class="form-group">
+                            <label>Enter Amount</label>
+                            <input type="number" id="withdraw-amount" placeholder="Enter amount" min="100" step="100" class="input-field">
+                        </div>
+                        <button class="btn-primary" onclick="withdraw()">
+                            <i class="fas fa-check"></i> Withdraw
+                        </button>
+                    </div>
+                    <div id="withdraw-error" class="error-message" style="display:none;"></div>
+                    <div id="withdraw-success" class="success-message" style="display:none;"></div>
+                </div>
+
+                <!-- Deposit Screen -->
+                <div id="deposit-screen" class="screen-view">
+                    <div class="screen-header">
+                        <button class="btn-back" onclick="showScreen('menu-screen')">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                        <h2>Deposit Money</h2>
+                    </div>
+                    <div class="screen-body">
+                        <div class="deposit-info">
+                            <i class="fas fa-info-circle"></i>
+                            <p>Insert cash into the slot and enter the amount</p>
+                        </div>
+                        <div class="form-group">
+                            <label>Deposit Amount</label>
+                            <input type="number" id="deposit-amount" placeholder="Enter amount" min="100" step="100" class="input-field">
+                        </div>
+                        <button class="btn-primary" onclick="deposit()">
+                            <i class="fas fa-check"></i> Deposit
+                        </button>
+                    </div>
+                    <div id="deposit-error" class="error-message" style="display:none;"></div>
+                    <div id="deposit-success" class="success-message" style="display:none;"></div>
+                </div>
+
+                <!-- Mini Statement Screen -->
+                <div id="statement-screen" class="screen-view">
+                    <div class="screen-header">
+                        <button class="btn-back" onclick="showScreen('menu-screen')">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                        <h2>Transaction History</h2>
+                    </div>
+                    <div class="statement-list" id="statement-list">
+                        <!-- Transactions will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Fast Cash Screen -->
+                <div id="fast-cash-screen" class="screen-view">
+                    <div class="screen-header">
+                        <button class="btn-back" onclick="showScreen('menu-screen')">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                        <h2>Fast Cash</h2>
+                    </div>
+                    <div class="screen-body">
+                        <p class="screen-subtitle">Select Quick Withdrawal Amount</p>
+                        <div class="fast-cash-grid">
+                            <button class="fast-cash-btn" onclick="quickWithdraw(500)">
+                                <i class="fas fa-money-bill"></i>
+                                <span>₹500</span>
+                            </button>
+                            <button class="fast-cash-btn" onclick="quickWithdraw(1000)">
+                                <i class="fas fa-money-bill"></i>
+                                <span>₹1000</span>
+                            </button>
+                            <button class="fast-cash-btn" onclick="quickWithdraw(2000)">
+                                <i class="fas fa-money-bill"></i>
+                                <span>₹2000</span>
+                            </button>
+                            <button class="fast-cash-btn" onclick="quickWithdraw(5000)">
+                                <i class="fas fa-money-bill"></i>
+                                <span>₹5000</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="fast-cash-error" class="error-message" style="display:none;"></div>
+                    <div id="fast-cash-success" class="success-message" style="display:none;"></div>
+                </div>
+
+                <!-- Change PIN Screen -->
+                <div id="pin-screen" class="screen-view">
+                    <div class="screen-header">
+                        <button class="btn-back" onclick="showScreen('menu-screen')">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                        <h2>Change PIN</h2>
+                    </div>
+                    <div class="screen-body">
+                        <div class="form-group">
+                            <label>Current PIN</label>
+                            <input type="password" id="old-pin" maxlength="4" placeholder="****" class="input-field">
+                        </div>
+                        <div class="form-group">
+                            <label>New PIN</label>
+                            <input type="password" id="new-pin" maxlength="4" placeholder="****" class="input-field">
+                        </div>
+                        <div class="form-group">
+                            <label>Confirm New PIN</label>
+                            <input type="password" id="confirm-pin" maxlength="4" placeholder="****" class="input-field">
+                        </div>
+                        <button class="btn-primary" onclick="changePIN()">
+                            <i class="fas fa-check"></i> Update PIN
+                        </button>
+                    </div>
+                    <div id="pin-error" class="error-message" style="display:none;"></div>
+                    <div id="pin-success" class="success-message" style="display:none;"></div>
+                </div>
+
+                <!-- Account Info Screen -->
+                <div id="account-screen" class="screen-view">
+                    <div class="screen-header">
+                        <button class="btn-back" onclick="showScreen('menu-screen')">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                        <h2>Account Information</h2>
+                    </div>
+                    <div class="account-info-card">
+                        <div class="info-row">
+                            <span class="info-label">Account Holder:</span>
+                            <span class="info-value" id="info-name">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Account Number:</span>
+                            <span class="info-value" id="info-account">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Account Status:</span>
+                            <span class="info-value status-active">Active</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Current Balance:</span>
+                            <span class="info-value balance" id="info-balance">₹0</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Account Type:</span>
+                            <span class="info-value">Savings Account</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">IFSC Code:</span>
+                            <span class="info-value">NGBANK0001</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Branch:</span>
+                            <span class="info-value">Main Branch</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Keyboard Panel -->
+        <div class="keyboard-panel">
+            <div class="key-row">
+                <button class="key">1</button>
+                <button class="key">2</button>
+                <button class="key">3</button>
+                <button class="key key-func">CLEAR</button>
+            </div>
+            <div class="key-row">
+                <button class="key">4</button>
+                <button class="key">5</button>
+                <button class="key">6</button>
+                <button class="key key-func">BACK</button>
+            </div>
+            <div class="key-row">
+                <button class="key">7</button>
+                <button class="key">8</button>
+                <button class="key">9</button>
+                <button class="key key-func">OK</button>
+            </div>
+            <div class="key-row">
+                <button class="key">0</button>
+                <button class="key key-func" style="grid-column: span 3;">CANCEL</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
