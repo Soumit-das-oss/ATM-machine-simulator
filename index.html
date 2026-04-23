@@ -12,20 +12,35 @@
 <div class="atm-container">
     <!-- ATM Machine -->
     <div class="atm-machine"> 
-        <!-- Header -->
-        <div class="atm-header">
-            <div class="bank-logo">
-                <i class="fas fa-university"></i>
-                <span>NextGen Bank ATM</span>
+        <!-- Top Hardware Section -->
+        <div class="hardware-top-section">
+            <div class="atm-header">
+                <div class="bank-logo">
+                    <i class="fas fa-university"></i>
+                    <span>NextGen Bank</span>
+                </div>
+                <div class="atm-status">
+                    <div class="status-light"></div>
+                    <span>Ready</span>
+                </div>
             </div>
-            <div class="atm-status">
-                <div class="status-light"></div>
-                <span>Ready</span>
+            
+            <div class="hardware-side">
+                <div class="hardware-slot card-reader">
+                    <div class="slot-light blink"></div>
+                    <div class="slot-opening"></div>
+                    <span class="slot-label"><i class="fas fa-credit-card"></i> INSERT CARD</span>
+                </div>
+                <div class="hardware-slot receipt-printer">
+                    <div class="slot-opening"></div>
+                    <span class="slot-label"><i class="fas fa-receipt"></i> RECEIPT</span>
+                </div>
             </div>
         </div>
 
         <!-- Main Screen -->
-        <div class="atm-screen">
+        <div class="atm-screen-bezel">
+            <div class="atm-screen">
             <div id="screen-content">
                 <!-- Login Screen -->
                 <div id="login-screen" class="screen-view active">
@@ -245,31 +260,44 @@
                     <div id="pin-success" class="success-message" style="display:none;"></div>
                 </div>
             </div>
+            </div>
+        </div>
         </div>
 
-        <!-- Keyboard Panel -->
-        <div class="keyboard-panel">
+        <div class="hardware-bottom-section">
+            <!-- Keyboard Panel -->
+            <div class="keyboard-panel">
             <div class="key-row">
                 <button class="key">1</button>
                 <button class="key">2</button>
                 <button class="key">3</button>
-                <button class="key key-func">CLEAR</button>
+                <button class="key key-cancel">CANCEL</button>
             </div>
             <div class="key-row">
                 <button class="key">4</button>
                 <button class="key">5</button>
                 <button class="key">6</button>
-                <button class="key key-func">BACK</button>
+                <button class="key key-clear">CLEAR</button>
             </div>
             <div class="key-row">
                 <button class="key">7</button>
                 <button class="key">8</button>
                 <button class="key">9</button>
-                <button class="key key-func">OK</button>
+                <button class="key key-enter">ENTER</button>
             </div>
             <div class="key-row">
+                <button class="key key-empty-btn"><i class="fas fa-star"></i></button>
                 <button class="key">0</button>
-                <button class="key key-func" style="grid-column: span 3;">CANCEL</button>
+                <button class="key key-empty-btn"><i class="fas fa-hashtag"></i></button>
+                <button class="key key-empty-btn"></button>
+            </div>
+        </div>
+        
+            <!-- Cash Dispenser -->
+            <div class="hardware-slot cash-dispenser">
+                <div class="slot-light"></div>
+                <div class="slot-opening"></div>
+                <span class="slot-label"><i class="fas fa-money-bill-wave"></i> CASH DISPENSER</span>
             </div>
         </div>
     </div>
