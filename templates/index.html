@@ -31,9 +31,12 @@
                     <div class="slot-opening"></div>
                     <span class="slot-label"><i class="fas fa-credit-card"></i> INSERT CARD</span>
                 </div>
-                <div class="hardware-slot receipt-printer">
+                <div class="hardware-slot receipt-printer" style="position: relative;">
                     <div class="slot-opening"></div>
                     <span class="slot-label"><i class="fas fa-receipt"></i> RECEIPT</span>
+                    <div id="receipt-output" class="printed-receipt-container">
+                        <div class="printed-paper" id="printed-paper-content"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -107,6 +110,10 @@
                         <button class="menu-btn" onclick="showScreen('pin-screen')">
                             <i class="fas fa-key"></i>
                             <span>Change PIN</span>
+                        </button>
+                        <button class="menu-btn" onclick="showScreen('print-receipt-screen')">
+                            <i class="fas fa-print"></i>
+                            <span>Print Receipt</span>
                         </button>
                         <button class="menu-btn" onclick="showScreen('account-screen')">
                             <i class="fas fa-info-circle"></i>
@@ -199,6 +206,22 @@
                     </div>
                     <div class="statement-list" id="statement-list">
                         <!-- Transactions will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Print Receipt Screen -->
+                <div id="print-receipt-screen" class="screen-view">
+                    <div class="screen-header">
+                        <button class="btn-back" onclick="showScreen('menu-screen')">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                        <h2>Print Receipt</h2>
+                    </div>
+                    <div class="screen-body">
+                        <p class="screen-subtitle">Select a transaction to print</p>
+                        <div class="statement-list" id="print-statement-list">
+                            <!-- Transactions for printing will be loaded here -->
+                        </div>
                     </div>
                 </div>
 
@@ -355,6 +378,7 @@
     </div>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>

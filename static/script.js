@@ -22,6 +22,8 @@ function showScreen(screenId) {
             loadStatements();
         } else if (screenId === 'account-screen') {
             loadAccountInfo();
+        } else if (screenId === 'print-receipt-screen') {
+            loadPrintableStatements();
         }
         
         // Clear messages
@@ -560,3 +562,113 @@ document.addEventListener('keypress', function(event) {
         }
     }
 });
+
+// Load transaction statements for printing
+function loadPrintableStatements() {
+    fetch('/statements', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        const statementList = document.getElementById('print-statement-list');
+        
+        if (data.status === 'success' && data.transactions.length > 0) {
+            let html = '<div class="transactions-container">';
+            data.transactions.reverse().forEach((transaction, index) => {
+                const icon = transaction.type === 'Withdrawal' ? 
+                    '<i class="fas fa-money-bill-wave"></i>' : 
+                    '<i class="fas fa-piggy-bank"></i>';
+                const colorClass = transaction.type === 'Withdrawal' ? 'withdraw' : 'deposit';
+                
+                html += `
+                    <div class="transaction-item ${colorClass}">
+                        <div class="transaction-icon">${icon}</div>
+                        <div class="transaction-details">
+                            <div class="transaction-type">${transaction.type}</div>
+                            <div class="transaction-date">${transaction.date}</div>
+                        </div>
+                        <div class="transaction-amount">
+                            ${transaction.type === 'Withdrawal' ? '-' : '+'}₹${transaction.amount.toLocaleString('en-IN')}
+                        </div>
+                        <button class="btn-print-receipt" title="Print Receipt" onclick="printTransactionReceipt('${transaction.type}', '${transaction.date}', ${transaction.amount}, ${transaction.balance})">
+                            <i class="fas fa-print"></i> Print
+                        </button>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            statementList.innerHTML = html;
+        } else {
+            statementList.innerHTML = `
+                <div class="no-transactions">
+                    <i class="fas fa-inbox"></i>
+                    <p>No transactions available for printing</p>
+                </div>
+            `;
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+// Print Receipt Animation and Download as Image
+function printTransactionReceipt(type, date, amount, balance) {
+    const paper = document.getElementById('printed-paper-content');
+    if(paper) {
+        const transId = Math.floor(100000 + Math.random() * 900000);
+        paper.innerHTML = `
+            <div style="text-align:center; font-weight:bold; font-size: 14px; margin-bottom:4px;">RGIT ATM</div>
+            <div style="text-align:center; font-size: 8px; margin-bottom:10px;">Rajiv Gandhi Institute of Technology</div>
+            <div style="border-bottom: 1px dashed #000; margin-bottom: 8px;"></div>
+            <table style="width: 100%; font-size: 10px; margin-bottom: 5px;">
+                <tr><td>Date:</td><td style="text-align:right">${date.split(' ')[0]}</td></tr>
+                <tr><td>Time:</td><td style="text-align:right">${date.split(' ')[1]}</td></tr>
+                <tr><td>Txn ID:</td><td style="text-align:right">TXN-${transId}</td></tr>
+            </table>
+            <div style="border-bottom: 1px dashed #000; margin-bottom: 8px;"></div>
+            <table style="width: 100%; font-size: 10px; margin-bottom: 5px;">
+                <tr><td>Type:</td><td style="text-align:right">${type}</td></tr>
+                <tr><td>Amount:</td><td style="text-align:right">₹${amount.toLocaleString('en-IN')}</td></tr>
+            </table>
+            <div style="border-bottom: 1px dashed #000; margin-bottom: 8px;"></div>
+            <div style="font-weight:bold; font-size: 11px; margin-bottom: 5px;">Avail Bal: ₹${balance.toLocaleString('en-IN')}</div>
+            <div style="border-bottom: 1px dashed #000; margin-bottom: 10px;"></div>
+            <div style="text-align:center; font-size: 9px;">Thank you for banking with us!</div>
+            <div style="text-align:center; font-size: 14px; margin-top: 8px; letter-spacing: 2px;">|||||| |||| |||</div>
+        `;
+    }
+
+    const container = document.getElementById('receipt-output');
+    if(container) {
+        container.classList.remove('printing');
+        void container.offsetWidth; // trigger reflow
+        container.classList.add('printing');
+        
+        setTimeout(() => {
+            // Use html2canvas to capture the paper as an image
+            if (typeof html2canvas !== 'undefined') {
+                html2canvas(paper, {
+                    scale: 4, // extremely high resolution
+                    backgroundColor: null
+                }).then(canvas => {
+                    const imgData = canvas.toDataURL('image/png');
+                    const a = document.createElement('a');
+                    a.href = imgData;
+                    a.download = `RGIT_ATM_Receipt_${date.replace(/[: ]/g, '_')}.png`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                });
+            } else {
+                console.error("html2canvas not loaded");
+            }
+            
+            // Retract after a few seconds
+            setTimeout(() => {
+                container.classList.remove('printing');
+            }, 3000);
+        }, 2000);
+    }
+}
