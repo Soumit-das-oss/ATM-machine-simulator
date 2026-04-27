@@ -19,7 +19,8 @@ A beautiful, modern ATM machine simulator built with Flask (Python) and vanilla 
   - Amount and balance after each transaction
 - **Change PIN**: Securely update your account PIN
 - **Account Information**: View detailed account information including account holder name, account number, status, and balance
-- **Professional UI**: Modern, responsive design with smooth animations
+- **Professional Skeuomorphic UI**: Immersive, realistic physical ATM interface with metallic hardware casing, recessed screen, glass glare, and 3D tactile keypad
+- **Transaction Receipts**: Dedicated, professional-grade receipt printing UI with high-resolution PNG image download preserving the "RGIT ATM" design
 
 ### Demo Accounts
 Three demo accounts are available for testing:
@@ -122,13 +123,14 @@ ATM/
 
 ## 🎨 Design Highlights
 
-- **Modern UI**: Clean, professional design with gradient backgrounds
+- **Professional Skeuomorphic UI**: Realistic ATM physical design with metallic casing, screen glare, and 3D tactile keypad
+- **High-Quality Receipt Generation**: Professional-grade printable transaction receipts using html2canvas for crisp PNG downloads
 - **Responsive**: Works on desktop and tablet devices
-- **Animations**: Smooth transitions and hover effects
+- **Animations**: Smooth transitions, tactile button press effects, and hover interactions
 - **Accessibility**: Clear labels and error messages
 - **Security**: PIN masking, account locking after failed attempts
 - **User Feedback**: Success/error messages for all operations
-- **Realistic ATM Feel**: Includes keyboard panel, status lights, and physical ATM styling
+- **Realistic ATM Feel**: Includes hardware panel, dynamic status lights, and physical machine aesthetics
 
 ## 🛡️ Security Features
 
