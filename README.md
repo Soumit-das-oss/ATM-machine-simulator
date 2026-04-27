@@ -97,8 +97,13 @@ Navigate to: `http://localhost:5000`
    - Check account status
    - View account type and branch details
 
-9. **Exit**
-   - Log out and return to login screen
+9. **Print Receipt**
+   - Select "Print Receipt" from the main menu
+   - Click on any recent transaction to generate a receipt
+   - A high-resolution PNG image of the receipt will be automatically downloaded
+
+10. **Exit**
+    - Log out and return to login screen
 
 ## 📁 Project Structure
 
